@@ -3,10 +3,7 @@ import { ProductsService } from 'src/products/services/products.service';
 import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/users.dto';
 import { User } from 'src/users/entities/user.entity';
 import { Order } from '../dtos/order.dto';
-<<<<<<< HEAD
 import { ConfigService } from '@nestjs/config';
-=======
->>>>>>> c302b13 (user module import product service)
 
 @Injectable()
 export class UsersService {
@@ -19,14 +16,10 @@ export class UsersService {
       role: 'customer',
     },
   ];
-<<<<<<< HEAD
   constructor(
     private productsService: ProductsService,
     private configService: ConfigService,
   ) {}
-=======
-  constructor(private productsService: ProductsService) {}
->>>>>>> c302b13 (user module import product service)
 
   findAll() {
     const apiKey = this.configService.get<string>('API_KEY');

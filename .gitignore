@@ -1,9 +1,7 @@
 # My env
 /src/A_test
-<<<<<<< HEAD
 *.env
-=======
->>>>>>> c302b13 (user module import product service)
+/mongo_data
 
 # compiled output
 /dist

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import config from 'config';
@@ -14,15 +13,5 @@ export class AppService {
     const dbName = this.configService.database.name;
     console.log(apiKey);
     return `Hello World! ${apiKey} - ${dbName}`;
-=======
-import { Injectable, Inject } from '@nestjs/common';
-
-@Injectable()
-export class AppService {
-  constructor(@Inject('API_KEY') private apiKey: string) {}
-
-  getHello(): string {
-    return `Hello World! ${this.apiKey}`;
->>>>>>> c302b13 (user module import product service)
   }
 }
