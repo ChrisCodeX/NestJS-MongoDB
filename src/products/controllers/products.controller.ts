@@ -29,47 +29,51 @@ export class ProductsController {
   /* Get Methods */
   @HttpCode(HttpStatus.ACCEPTED)
   @Get()
-  getProducts(@Query('limit') limit: number, @Query('offset') offset: number) {
+  async getProducts(
+    @Query('limit') limit: number,
+    @Query('offset') offset: number,
+  ) {
+    const rta = await this.productService.findAll();
     return {
-      message: this.productService.findAll(),
+      message: rta,
     };
   }
 
   @Get('/:productId')
-  getProduct(@Param('productId', ParseIntPipe) productId: number) {
+  async getProduct(@Param('productId') productId: string) {
     return {
-      message: this.productService.findOne(productId),
+      message: await this.productService.findOne(productId),
     };
   }
 
-  /* Post Methods */
-  @Post()
-  create(@Body() payload: CreateProductDto) {
-    const newProduct = this.productService.create(payload);
-    return {
-      message: 'created',
-      newProduct,
-    };
-  }
+  // /* Post Methods */
+  // @Post()
+  // create(@Body() payload: CreateProductDto) {
+  //   const newProduct = this.productService.create(payload);
+  //   return {
+  //     message: 'created',
+  //     newProduct,
+  //   };
+  // }
 
-  /* Patch Methods */
-  @Patch('/:id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() payload: UpdateProductDto,
-  ) {
-    const product = this.productService.update(id, payload);
-    return {
-      message: 'updated',
-      payload: {
-        product,
-      },
-    };
-  }
+  // /* Patch Methods */
+  // @Patch('/:id')
+  // update(
+  //   @Param('id', ParseIntPipe) id: number,
+  //   @Body() payload: UpdateProductDto,
+  // ) {
+  //   const product = this.productService.update(id, payload);
+  //   return {
+  //     message: 'updated',
+  //     payload: {
+  //       product,
+  //     },
+  //   };
+  // }
 
-  /* Deleted Methods */
-  @Delete('/:id')
-  delete(@Param('id', ParseIntPipe) id: number) {
-    return this.productService.remove(id);
-  }
+  // /* Deleted Methods */
+  // @Delete('/:id')
+  // delete(@Param('id', ParseIntPipe) id: number) {
+  //   return this.productService.remove(id);
+  // }
 }
