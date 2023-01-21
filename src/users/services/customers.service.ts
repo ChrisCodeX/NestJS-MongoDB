@@ -35,29 +35,39 @@ export class CustomersService {
     });
   }
 
-  // create(payload: CreateCustomerDto) {
-  //   this.counterId += 1;
-  //   const customer: Customer = {
-  //     id: this.counterId,
-  //     ...payload,
-  //   };
-  //   this.customers.push(customer);
-  //   return customer;
-  // }
+  async create(payload: CreateCustomerDto) {
+    return new Promise(async (resolve) => {
+      const newCustomer = new this.customerModel(payload);
+      resolve(await newCustomer.save());
+    });
+  }
 
-  // update(id: number, changes: UpdateCustomerDto) {
-  //   const customer = this.findOne(id);
-  //   const index = this.customers.findIndex((item) => item.id === id);
+  async update(customerId: string, changes: UpdateCustomerDto) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const customer = await this.customerModel
+          .findOneAndUpdate(
+            {
+              _id: customerId,
+            },
+            {
+              $set: changes,
+            },
+            {
+              new: true,
+            },
+          )
+          .exec();
 
-  //   if (index === -1) {
-  //     throw new NotFoundException(`customer ${id} not found`);
-  //   }
-  //   this.customers[index] = {
-  //     ...customer,
-  //     ...changes,
-  //   };
-  //   return this.customers[index];
-  // }
+        if (!customer) {
+          throw new NotFoundException(`customer #${customerId} not found`);
+        }
+        resolve(customer);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
 
   // delete(id: number) {
   //   const index = this.customers.findIndex((item) => item.id === id);
