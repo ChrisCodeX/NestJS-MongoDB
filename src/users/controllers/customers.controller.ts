@@ -59,12 +59,12 @@ export class CustomersController {
     };
   }
 
-  // /* Delete Methods */
-  // // Delete a customer
-  // @Delete('/:id')
-  // delete(@Param('id', ParseIntPipe) id: number) {
-  //   return {
-  //     message: this.customerService.delete(id),
-  //   };
-  // }
+  /* Delete Methods */
+  // Delete a customer
+  @Delete('/:id')
+  async delete(@Param('id', MongoIdPipe) id: string) {
+    return {
+      message: await this.customerService.remove(id),
+    };
+  }
 }
