@@ -14,6 +14,7 @@ import {
   CreateCustomerDto,
   UpdateCustomerDto,
 } from 'src/users/dtos/customers.dto';
+import { MongoIdPipe } from 'src/common/mongo-id/mongo-id.pipe';
 
 @ApiTags('customers')
 @Controller('customers')
@@ -37,26 +38,26 @@ export class CustomersController {
     };
   }
 
-  // /* Post Methods */
-  // // Create a new customer
-  // @Post()
-  // create(@Body() payload: CreateCustomerDto) {
-  //   return {
-  //     message: this.customerService.create(payload),
-  //   };
-  // }
+  /* Post Methods */
+  // Create a new customer
+  @Post()
+  async create(@Body() payload: CreateCustomerDto) {
+    return {
+      message: await this.customerService.create(payload),
+    };
+  }
 
-  // /* Patch Methods */
-  // // Update a customer
-  // @Patch('/:id')
-  // update(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @Body() payload: UpdateCustomerDto,
-  // ) {
-  //   return {
-  //     message: this.customerService.update(id, payload),
-  //   };
-  // }
+  /* Patch Methods */
+  // Update a customer
+  @Patch('/:id')
+  async update(
+    @Param('id', MongoIdPipe) id: string,
+    @Body() payload: UpdateCustomerDto,
+  ) {
+    return {
+      message: await this.customerService.update(id, payload),
+    };
+  }
 
   // /* Delete Methods */
   // // Delete a customer
