@@ -69,12 +69,17 @@ export class CustomersService {
     });
   }
 
-  // delete(id: number) {
-  //   const index = this.customers.findIndex((item) => item.id === id);
-  //   if (index === -1) {
-  //     throw new NotFoundException(`customer ${id} not found`);
-  //   }
-  //   this.customers.splice(index, 1);
-  //   return true;
-  // }
+  remove(customerId: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const customer = await this.customerModel.findByIdAndDelete(customerId);
+        if (!customer) {
+          throw new NotFoundException(`customer #${customerId} not found`);
+        }
+        resolve(customer);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
 }
