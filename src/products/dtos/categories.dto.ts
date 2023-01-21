@@ -1,12 +1,18 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { PartialType } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
 
 @InputType()
 export class CreateCategoryDto {
   @Field()
   @IsString()
-  name: string;
+  @IsNotEmpty()
+  readonly name: string;
+
+  @Field()
+  @IsUrl()
+  @IsNotEmpty()
+  readonly image: string;
 }
 
 export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {}
