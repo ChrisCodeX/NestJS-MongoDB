@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-
+import { InjectModel } from '@nestjs/mongoose';
 import { Customer } from 'src/users/entities/customer.entity';
+import { Model } from 'mongoose';
 
 import {
   CreateCustomerDto,
@@ -9,58 +10,61 @@ import {
 
 @Injectable()
 export class CustomersService {
-  private counterId = 1;
-  private customers: Customer[] = [
-    {
-      id: 1,
-      name: 'Christian',
-      lastName: 'Espinoza',
-      phone: '123456789',
-    },
-  ];
+  constructor(
+    @InjectModel(Customer.name) private customerModel: Model<Customer>,
+  ) {}
 
-  findAll() {
-    return this.customers;
+  async findAll() {
+    return new Promise(async (resolve) => {
+      const customers = await this.customerModel.find().exec();
+      resolve(customers);
+    });
   }
 
-  findOne(id: number) {
-    const customerId = this.customers.findIndex((item) => item.id === id);
-    if (customerId === -1) {
-      throw new NotFoundException(`customer ${id} not found`);
-    }
-    return this.customers[customerId];
+  async findOne(customerId: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const customer = await this.customerModel.findById(customerId).exec();
+        if (!customer) {
+          throw new NotFoundException(`customer #${customerId} not found`);
+        }
+        resolve(customer);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
-  create(payload: CreateCustomerDto) {
-    this.counterId += 1;
-    const customer: Customer = {
-      id: this.counterId,
-      ...payload,
-    };
-    this.customers.push(customer);
-    return customer;
-  }
+  // create(payload: CreateCustomerDto) {
+  //   this.counterId += 1;
+  //   const customer: Customer = {
+  //     id: this.counterId,
+  //     ...payload,
+  //   };
+  //   this.customers.push(customer);
+  //   return customer;
+  // }
 
-  update(id: number, changes: UpdateCustomerDto) {
-    const customer = this.findOne(id);
-    const index = this.customers.findIndex((item) => item.id === id);
+  // update(id: number, changes: UpdateCustomerDto) {
+  //   const customer = this.findOne(id);
+  //   const index = this.customers.findIndex((item) => item.id === id);
 
-    if (index === -1) {
-      throw new NotFoundException(`customer ${id} not found`);
-    }
-    this.customers[index] = {
-      ...customer,
-      ...changes,
-    };
-    return this.customers[index];
-  }
+  //   if (index === -1) {
+  //     throw new NotFoundException(`customer ${id} not found`);
+  //   }
+  //   this.customers[index] = {
+  //     ...customer,
+  //     ...changes,
+  //   };
+  //   return this.customers[index];
+  // }
 
-  delete(id: number) {
-    const index = this.customers.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new NotFoundException(`customer ${id} not found`);
-    }
-    this.customers.splice(index, 1);
-    return true;
-  }
+  // delete(id: number) {
+  //   const index = this.customers.findIndex((item) => item.id === id);
+  //   if (index === -1) {
+  //     throw new NotFoundException(`customer ${id} not found`);
+  //   }
+  //   this.customers.splice(index, 1);
+  //   return true;
+  // }
 }
