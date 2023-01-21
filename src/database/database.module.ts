@@ -1,5 +1,6 @@
 import { Module, Global } from '@nestjs/common';
-import { MongoClient } from 'mongodb';
+// Mongo connection
+// import { MongoClient } from 'mongodb';
 import { ConfigType } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
@@ -13,7 +14,7 @@ const API_KEY_PROD = 'prod_321';
   imports: [
     MongooseModule.forRootAsync({
       useFactory: async (configService: ConfigType<typeof config>) => {
-        // Mongo Configurations from config
+        // Mongoose Configurations from config
         const { connection, user, password, port, host, dbName } =
           configService.mongo;
         return {
@@ -31,6 +32,7 @@ const API_KEY_PROD = 'prod_321';
       provide: 'API_KEY',
       useValue: process.env.NODE_ENV === 'dev' ? API_KEY_DEV : API_KEY_PROD,
     },
+    // Mongo Connection
     // {
     //   provide: 'MONGO',
     //   useFactory: async (configService: ConfigType<typeof config>) => {
