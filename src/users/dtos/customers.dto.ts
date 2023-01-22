@@ -1,6 +1,27 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { PartialType, ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsArray,
+  ValidateNested,
+  ArrayNotEmpty,
+} from 'class-validator';
+
+@InputType()
+class Skill {
+  @ApiProperty()
+  @Field()
+  @IsString()
+  @IsNotEmpty()
+  readonly name: string;
+
+  @ApiProperty()
+  @Field()
+  @IsString()
+  @IsNotEmpty()
+  readonly color: string;
+}
 
 @InputType()
 export class CreateCustomerDto {
@@ -8,19 +29,27 @@ export class CreateCustomerDto {
   @Field()
   @IsString()
   @IsNotEmpty()
-  name: string;
+  readonly name: string;
 
   @ApiProperty()
   @Field()
   @IsString()
   @IsNotEmpty()
-  lastName: string;
+  readonly lastName: string;
 
   @ApiProperty()
   @Field()
   @IsString()
   @IsNotEmpty()
-  phone: string;
+  readonly phone: string;
+
+  @ApiProperty()
+  @Field()
+  @IsNotEmpty()
+  @ValidateNested()
+  @IsArray()
+  @ArrayNotEmpty()
+  readonly skills: Skill;
 }
 
 @InputType()

@@ -8,19 +8,19 @@ export class CreateUserDto {
   @Field()
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  readonly email: string;
 
   @ApiProperty()
   @Field()
   @IsNotEmpty()
   @IsString()
-  password: string;
+  readonly password: string;
 
   @ApiProperty()
   @Field()
   @IsNotEmpty()
   @IsString()
-  role: string;
+  readonly role: string;
 }
 
 @InputType()

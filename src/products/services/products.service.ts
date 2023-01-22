@@ -33,9 +33,11 @@ export class ProductsService {
         .find(filters)
         .skip(offset)
         .limit(limit)
+        // Resolve join to brand by id reference
+        .populate('brand')
         .exec();
     }
-    return await this.productModel.find().exec();
+    return await this.productModel.find().populate('brand').exec();
   }
 
   async findOne(productId: string) {

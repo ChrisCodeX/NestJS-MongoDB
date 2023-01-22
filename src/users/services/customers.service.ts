@@ -69,7 +69,7 @@ export class CustomersService {
     });
   }
 
-  remove(customerId: string) {
+  async remove(customerId: string) {
     return new Promise(async (resolve, reject) => {
       try {
         const customerDeleted = await this.customerModel.findByIdAndDelete(

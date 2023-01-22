@@ -9,11 +9,14 @@ import {
   ValidateIf,
   // Validation document embedded
   ValidateNested,
+  // Validation document referenced
+  IsMongoId,
 } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
 import { PartialType } from '@nestjs/swagger';
 
 import { CreateCategoryDto } from '../dtos/categories.dto';
+import { Types } from 'mongoose';
 
 @InputType()
 export class CreateProductDto {
@@ -44,10 +47,17 @@ export class CreateProductDto {
   @IsUrl()
   readonly image: string;
 
+  // 1-1 embedded
   @Field()
   @ValidateNested()
   @IsNotEmpty()
   readonly category: CreateCategoryDto;
+
+  // 1-1 referenced
+  @Field()
+  @IsMongoId()
+  @IsNotEmpty()
+  readonly brand: Types.ObjectId;
 }
 
 @InputType()
