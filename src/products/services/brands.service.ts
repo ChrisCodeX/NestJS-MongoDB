@@ -9,47 +9,70 @@ export class BrandsService {
   constructor(@InjectModel(Brand.name) private brandModel: Model<Brand>) {}
 
   async findAll() {
-    return await this.brandModel.find().exec();
+    return new Promise(async (resolve) => {
+      const brands = await this.brandModel.find().exec();
+      resolve(brands);
+    });
   }
 
   async findOne(brandId: string) {
-    const brand = await this.brandModel.findById(brandId).exec();
-    if (!brand) {
-      throw new NotFoundException(`brand #${brandId} not found`);
-    }
-    return brand;
+    return new Promise(async (resolve, reject) => {
+      try {
+        const brand = await this.brandModel.findById(brandId).exec();
+        if (!brand) {
+          throw new NotFoundException(`brand #${brandId} not found`);
+        }
+        resolve(brand);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   async create(payload: CreateBrandDto) {
-    const newBrand = new this.brandModel(payload);
-    return await newBrand.save();
+    return new Promise(async (resolve, reject) => {
+      const newBrand = new this.brandModel(payload);
+      resolve(await newBrand.save());
+    });
   }
 
   async update(brandId: string, changes: UpdateBrandDto) {
-    const brand = await this.brandModel
-      .findOneAndUpdate(
-        {
-          _id: brandId,
-        },
-        {
-          $set: changes,
-        },
-        {
-          new: true,
-        },
-      )
-      .exec();
-    if (!brand) {
-      throw new NotFoundException(`brand #${brandId} not found`);
-    }
-    return brand;
+    return new Promise(async (resolve, reject) => {
+      try {
+        const brand = await this.brandModel
+          .findOneAndUpdate(
+            {
+              _id: brandId,
+            },
+            {
+              $set: changes,
+            },
+            {
+              new: true,
+            },
+          )
+          .exec();
+        if (!brand) {
+          throw new NotFoundException(`brand #${brandId} not found`);
+        }
+        resolve(brand);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   async remove(brandId: string) {
-    const rta = await this.brandModel.findByIdAndDelete(brandId);
-    if (!rta) {
-      throw new NotFoundException(`brand #${brandId} not found`);
-    }
-    return rta;
+    return new Promise(async (resolve, reject) => {
+      try {
+        const deletedBrand = await this.brandModel.findByIdAndDelete(brandId);
+        if (!deletedBrand) {
+          throw new NotFoundException(`brand #${brandId} not found`);
+        }
+        resolve(deletedBrand);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 }

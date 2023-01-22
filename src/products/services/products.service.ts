@@ -72,10 +72,10 @@ export class ProductsService {
   }
 
   async remove(productId: string) {
-    const product = await this.productModel.findByIdAndDelete(productId);
-    if (!product) {
+    const productDeleted = await this.productModel.findByIdAndDelete(productId);
+    if (!productDeleted) {
       throw new NotFoundException(`product ${productId} not found`);
     }
-    return product;
+    return productDeleted;
   }
 }
