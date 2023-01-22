@@ -15,7 +15,7 @@ import {
 import { Field, InputType } from '@nestjs/graphql';
 import { PartialType } from '@nestjs/swagger';
 
-import { CreateCategoryDto } from '../dtos/categories.dto';
+import { CreateCategoryDto } from './subdocuments/categories.dto';
 import { Types } from 'mongoose';
 
 @InputType()

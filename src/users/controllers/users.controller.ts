@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -34,14 +33,6 @@ export class UsersController {
       message: await this.userService.findOne(id),
     };
   }
-
-  // Get user order
-  // @Get('/:id/orders')
-  // async getOrders(@Param('id', ParseIntPipe) id: number) {
-  //   return {
-  //     message: await this.userService.getOrderByUser(id),
-  //   };
-  // }
 
   // Create a user
   @Post()
