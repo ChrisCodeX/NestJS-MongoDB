@@ -1,75 +1,92 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ProductsService } from 'src/products/services/products.service';
-import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/users.dto';
-import { User } from 'src/users/entities/user.entity';
-import { Order } from '../dtos/order.dto';
 import { ConfigService } from '@nestjs/config';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+
+import { ProductsService } from 'src/products/services/products.service';
+import { User } from 'src/users/entities/user.entity';
+import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/users.dto';
+import { Order } from '../dtos/order.dto';
 
 @Injectable()
 export class UsersService {
-  private counterId = 1;
-  private users: User[] = [
-    {
-      id: 1,
-      email: 'c.espinoza.code@gmail.com',
-      password: '1234',
-      role: 'customer',
-    },
-  ];
   constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
     private productsService: ProductsService,
     private configService: ConfigService,
   ) {}
 
-  findAll() {
-    const apiKey = this.configService.get<string>('API_KEY');
-    console.log(apiKey);
-    return this.users;
+  async findAll() {
+    return new Promise(async (resolve) => {
+      const users = await this.userModel.find().exec();
+      resolve(users);
+    });
+    // const apiKey = this.configService.get<string>('API_KEY');
+    // console.log(apiKey);
   }
 
-  findOne(id: number) {
-    const userId = this.users.findIndex((item) => item.id === id);
-    if (userId === -1) {
-      throw new NotFoundException(`user ${id} not found`);
-    }
-    return this.users[userId];
+  async findOne(userId: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await this.userModel.findById(userId).exec();
+        if (!user) {
+          throw new NotFoundException(`user #${userId} not found`);
+        }
+        resolve(user);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
-  create(payload: CreateUserDto) {
-    this.counterId += 1;
-    const newUser = {
-      id: this.counterId,
-      ...payload,
-    };
-    this.users.push(newUser);
-    return newUser;
+  async create(payload: CreateUserDto) {
+    return new Promise(async (resolve) => {
+      const newUser = new this.userModel(payload);
+      const savedUser = await newUser.save();
+      resolve(savedUser);
+    });
   }
 
-  update(id: number, changes: UpdateUserDto) {
-    const user = this.findOne(id);
-    const userIndex = this.users.findIndex((item) => item.id === id);
-    this.users[userIndex] = {
-      ...user,
-      ...changes,
-    };
-    return this.users[userIndex];
+  async update(userId: string, changes: UpdateUserDto) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const user = await this.userModel
+          .findByIdAndUpdate(userId, changes, {
+            new: true,
+          })
+          .exec();
+
+        if (!user) {
+          throw new NotFoundException(`user #${userId} not found`);
+        }
+
+        resolve(user);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
-  remove(id: number) {
-    const userId = this.users.findIndex((item) => item.id === id);
-    if (userId === -1) {
-      throw new NotFoundException(`user ${id} not found`);
-    }
-    this.users.splice(userId, 1);
-    return true;
+  async remove(userId: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const userDeleted = await this.userModel.findByIdAndDelete(userId);
+        if (!userDeleted) {
+          throw new NotFoundException(`user #${userId} not found`);
+        }
+        resolve(userDeleted);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
-  async getOrderByUser(id: number) {
-    const user = this.findOne(id);
-    return {
-      date: new Date(),
-      user,
-      products: await this.productsService.findAll(),
-    };
-  }
+  // async getOrderByUser(id: number) {
+  //   const user = this.findOne(id);
+  //   return {
+  //     date: new Date(),
+  //     user,
+  //     products: await this.productsService.findAll(),
+  //   };
+  // }
 }

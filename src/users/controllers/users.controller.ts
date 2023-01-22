@@ -9,6 +9,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { MongoIdPipe } from 'src/common/mongo-id/mongo-id.pipe';
 import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/users.dto';
 import { UsersService } from 'src/users/services/users.service';
 
@@ -20,55 +21,55 @@ export class UsersController {
   // Get all users
   @ApiOperation({ summary: 'List of all users' })
   @Get()
-  getUsers() {
+  async getUsers() {
     return {
-      message: this.userService.findAll(),
+      message: await this.userService.findAll(),
     };
   }
 
   // Get a user
   @Get('/:id')
-  getUser(@Param('id', ParseIntPipe) id: number) {
+  async getUser(@Param('id', MongoIdPipe) id: string) {
     return {
-      message: this.userService.findOne(id),
+      message: await this.userService.findOne(id),
     };
   }
 
   // Get user order
-  @Get('/:id/orders')
-  getOrders(@Param('id', ParseIntPipe) id: number) {
-    return {
-      message: this.userService.getOrderByUser(id),
-    };
-  }
+  // @Get('/:id/orders')
+  // async getOrders(@Param('id', ParseIntPipe) id: number) {
+  //   return {
+  //     message: await this.userService.getOrderByUser(id),
+  //   };
+  // }
 
   // Create a user
   @Post()
-  create(@Body() payload: CreateUserDto) {
+  async create(@Body() payload: CreateUserDto) {
     return {
       message: 'created',
-      payload: this.userService.create(payload),
+      payload: await this.userService.create(payload),
     };
   }
 
   // Update a user
   @Patch('/:id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
+  async update(
+    @Param('id', MongoIdPipe) id: string,
     @Body() payload: UpdateUserDto,
   ) {
     return {
       message: 'updated',
-      payload: this.userService.update(id, payload),
+      payload: await this.userService.update(id, payload),
     };
   }
 
   // Delete a user
   @Delete('/:id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id', MongoIdPipe) id: string) {
     return {
       message: 'deleted',
-      payload: this.userService.remove(id),
+      payload: await this.userService.remove(id),
     };
   }
 }

@@ -72,11 +72,13 @@ export class CustomersService {
   remove(customerId: string) {
     return new Promise(async (resolve, reject) => {
       try {
-        const customer = await this.customerModel.findByIdAndDelete(customerId);
-        if (!customer) {
+        const customerDeleted = await this.customerModel.findByIdAndDelete(
+          customerId,
+        );
+        if (!customerDeleted) {
           throw new NotFoundException(`customer #${customerId} not found`);
         }
-        resolve(customer);
+        resolve(customerDeleted);
       } catch (error) {
         reject(error);
       }
