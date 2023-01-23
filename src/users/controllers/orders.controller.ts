@@ -64,7 +64,9 @@ export class OrdersController {
   async updateProductsToOrder(
     @Param('orderId', MongoIdPipe) orderId: string,
     @Body() payload: AddProductsToOrderDto,
-  ) {}
+  ) {
+    return this.orderService.addProductsToOrder(orderId, payload.products);
+  }
 
   /* Delete Methods */
   // Delete an order
