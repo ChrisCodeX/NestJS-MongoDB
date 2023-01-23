@@ -11,6 +11,8 @@ export class Order extends Document {
   @Prop({ type: Types.ObjectId, ref: Customer.name, required: true })
   customer: Customer | Types.ObjectId;
 
+  // Other way
+  // @Prop({ type: [{ type: Types.ObjectId, ref: Product.name }] })
   @Prop({ type: [ProductSchema] })
   products: Types.Array<Product>;
 }
