@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 import { CreateOrderDto, UpdateOrderDto } from '../dtos/order.dto';
 import { Order } from '../entities/order.entity';
@@ -86,7 +86,7 @@ export class OrdersService {
     });
   }
 
-  async addProductToOrder(orderId: string, productsIds: string[]) {
+  async addProductsToOrder(orderId: string, productsIds: Types.ObjectId[]) {
     return new Promise(async (resolve, reject) => {
       try {
         const order = await this.orderModel.findById(orderId);
