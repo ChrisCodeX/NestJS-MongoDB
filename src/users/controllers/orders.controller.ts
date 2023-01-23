@@ -9,7 +9,11 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { MongoIdPipe } from 'src/common/mongo-id/mongo-id.pipe';
-import { CreateOrderDto, UpdateOrderDto } from '../dtos/order.dto';
+import {
+  AddProductsToOrderDto,
+  CreateOrderDto,
+  UpdateOrderDto,
+} from '../dtos/order.dto';
 import { OrdersService } from '../services/orders.service';
 
 @ApiTags('orders')
@@ -27,8 +31,8 @@ export class OrdersController {
   }
 
   // Get an order by id
-  @Get('/:id')
-  async getOrder(@Param('id', MongoIdPipe) orderId: string) {
+  @Get('/:orderId')
+  async getOrder(@Param('orderId', MongoIdPipe) orderId: string) {
     return {
       message: await this.orderService.findOne(orderId),
     };
@@ -45,9 +49,9 @@ export class OrdersController {
 
   /* Patch Methods */
   // Update an order
-  @Patch('/:id')
+  @Patch('/:orderId')
   async updateOrder(
-    @Param('id', MongoIdPipe) orderId: string,
+    @Param('orderId', MongoIdPipe) orderId: string,
     @Body() payload: UpdateOrderDto,
   ) {
     return {
@@ -55,12 +59,32 @@ export class OrdersController {
     };
   }
 
+  // Add products to an order
+  @Patch('/:orderId/products')
+  async updateProductsToOrder(
+    @Param('orderId', MongoIdPipe) orderId: string,
+    @Body() payload: AddProductsToOrderDto,
+  ) {}
+
   /* Delete Methods */
   // Delete an order
-  @Delete('/:id')
-  async deleteOrder(@Param('id', MongoIdPipe) orderId: string) {
+  @Delete('/:orderId')
+  async deleteOrder(@Param('orderId', MongoIdPipe) orderId: string) {
     return {
       message: await this.orderService.remove(orderId),
     };
+  }
+
+  // Delete products from an order
+  @Delete('/:orderId/product/:productId')
+  async removeProduct(
+    @Param('orderId', MongoIdPipe) orderId: string,
+    @Param('productId', MongoIdPipe) productId: string,
+  ) {
+    const productRemoved = await this.orderService.removeProduct(
+      orderId,
+      productId,
+    );
+    return productRemoved;
   }
 }
