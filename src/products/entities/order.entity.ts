@@ -1,7 +1,7 @@
 import { Document, Types } from 'mongoose';
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
 
-import { Product } from 'src/products/entities/product.entity';
+import { Product, ProductSchema } from 'src/products/entities/product.entity';
 import { Customer } from 'src/users/entities/customer.entity';
 
 export class Order extends Document {
@@ -11,7 +11,8 @@ export class Order extends Document {
   @Prop({ type: Types.ObjectId, ref: Customer.name, required: true })
   customer: Customer | Types.ObjectId;
 
-  product: Product[];
+  @Prop({ type: [ProductSchema] })
+  products: Types.Array<Product>;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
