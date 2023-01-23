@@ -4,7 +4,9 @@ import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Product, ProductSchema } from 'src/products/entities/product.entity';
 import { Customer } from 'src/users/entities/customer.entity';
 
+// Order schema for DB
 export class Order extends Document {
+  /* Schema properties */
   @Prop({ type: Date })
   date: Date;
 
@@ -17,4 +19,5 @@ export class Order extends Document {
   products: Types.Array<Product>;
 }
 
+// Order schema creation
 export const OrderSchema = SchemaFactory.createForClass(Order);
