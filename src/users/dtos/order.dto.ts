@@ -32,3 +32,7 @@ export class CreateOrderDto {
 export class UpdateOrderDto extends PartialType(
   OmitType(CreateOrderDto, ['customer']),
 ) {}
+
+export class AddProductsToOrderDto {
+  readonly productsIds: Types.ObjectId[];
+}
