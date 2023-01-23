@@ -1,8 +1,34 @@
-import { Product } from 'src/products/entities/product.entity';
-import { User } from '../entities/user.entity';
+import { Field, InputType } from '@nestjs/graphql';
+import { PartialType, OmitType } from '@nestjs/swagger';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsDate,
+  IsMongoId,
+  IsNotEmpty,
+} from 'class-validator';
+import { Types } from 'mongoose';
 
-export class Order {
-  date: Date;
-  user: User;
-  products: Product[];
+@InputType()
+export class CreateOrderDto {
+  @Field()
+  @IsMongoId()
+  @IsNotEmpty()
+  readonly customer: Types.ObjectId;
+
+  @Field()
+  @IsDate()
+  @IsNotEmpty()
+  readonly date: Date;
+
+  @Field()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsNotEmpty()
+  readonly products: Types.ObjectId[];
 }
+
+// Omit products for update
+export class UpdateOrderDto extends PartialType(
+  OmitType(CreateOrderDto, ['customer']),
+) {}

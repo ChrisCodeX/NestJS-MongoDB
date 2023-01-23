@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Body,
   Patch,
@@ -32,7 +31,7 @@ export class CustomersController {
 
   // Get a customer by id
   @Get('/:id')
-  async getCustomer(@Param('id') customerId: string) {
+  async getCustomer(@Param('id', MongoIdPipe) customerId: string) {
     return {
       message: await this.customerService.findOne(customerId),
     };
@@ -41,7 +40,7 @@ export class CustomersController {
   /* Post Methods */
   // Create a new customer
   @Post()
-  async create(@Body() payload: CreateCustomerDto) {
+  async createCustomer(@Body() payload: CreateCustomerDto) {
     return {
       message: await this.customerService.create(payload),
     };
@@ -50,21 +49,21 @@ export class CustomersController {
   /* Patch Methods */
   // Update a customer
   @Patch('/:id')
-  async update(
-    @Param('id', MongoIdPipe) id: string,
+  async updateCustomer(
+    @Param('id', MongoIdPipe) customerId: string,
     @Body() payload: UpdateCustomerDto,
   ) {
     return {
-      message: await this.customerService.update(id, payload),
+      message: await this.customerService.update(customerId, payload),
     };
   }
 
   /* Delete Methods */
   // Delete a customer
   @Delete('/:id')
-  async delete(@Param('id', MongoIdPipe) id: string) {
+  async deleteCustomer(@Param('id', MongoIdPipe) customerId: string) {
     return {
-      message: await this.customerService.remove(id),
+      message: await this.customerService.remove(customerId),
     };
   }
 }

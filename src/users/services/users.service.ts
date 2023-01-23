@@ -6,7 +6,6 @@ import { Model } from 'mongoose';
 import { ProductsService } from 'src/products/services/products.service';
 import { User } from 'src/users/entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from 'src/users/dtos/users.dto';
-import { Order } from '../dtos/order.dto';
 
 @Injectable()
 export class UsersService {

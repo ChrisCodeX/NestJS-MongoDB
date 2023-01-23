@@ -38,7 +38,8 @@ export class CustomersService {
   async create(payload: CreateCustomerDto) {
     return new Promise(async (resolve) => {
       const newCustomer = new this.customerModel(payload);
-      resolve(await newCustomer.save());
+      const customerSaved = await newCustomer.save();
+      resolve(customerSaved);
     });
   }
 

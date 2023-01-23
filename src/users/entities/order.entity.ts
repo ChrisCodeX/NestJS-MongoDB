@@ -1,10 +1,11 @@
 import { Document, Types } from 'mongoose';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { Product, ProductSchema } from 'src/products/entities/product.entity';
+import { Product } from 'src/products/entities/product.entity';
 import { Customer } from 'src/users/entities/customer.entity';
 
 // Order schema for DB
+@Schema()
 export class Order extends Document {
   /* Schema properties */
   @Prop({ type: Date })
@@ -15,8 +16,8 @@ export class Order extends Document {
 
   // Other way
   // @Prop({ type: [{ type: Types.ObjectId, ref: Product.name }] })
-  @Prop({ type: [ProductSchema] })
-  products: Types.Array<Product>;
+  @Prop({ type: [{ type: Types.ObjectId, ref: Product.name }] })
+  products: Types.Array<Types.ObjectId>;
 }
 
 // Order schema creation
