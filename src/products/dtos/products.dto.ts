@@ -13,7 +13,7 @@ import {
   IsMongoId,
 } from 'class-validator';
 import { Field, InputType } from '@nestjs/graphql';
-import { PartialType } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 
 import { CreateCategoryDto } from './subdocuments/categories.dto';
 import { Types } from 'mongoose';
@@ -54,6 +54,7 @@ export class CreateProductDto {
   readonly category: CreateCategoryDto;
 
   // 1-1 referenced
+  @ApiProperty()
   @Field()
   @IsMongoId()
   @IsNotEmpty()
