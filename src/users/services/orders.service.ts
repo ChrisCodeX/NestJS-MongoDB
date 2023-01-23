@@ -72,4 +72,32 @@ export class OrdersService {
       }
     });
   }
+
+  async removeProduct(orderId: string, productId: string) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const order = await this.orderModel.findById(orderId);
+        order.products.pull(productId);
+        const orderSaved = order.save();
+        resolve(orderSaved);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  async addProductToOrder(orderId: string, productsIds: string[]) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const order = await this.orderModel.findById(orderId);
+        productsIds.forEach((productId) => {
+          order.products.push(productId);
+        });
+        const orderSaved = order.save();
+        resolve(orderSaved);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
 }
