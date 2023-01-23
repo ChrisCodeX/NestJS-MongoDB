@@ -29,10 +29,16 @@ export class CreateOrderDto {
 }
 
 // Omit products for update
+@InputType()
 export class UpdateOrderDto extends PartialType(
   OmitType(CreateOrderDto, ['customer']),
 ) {}
 
+@InputType()
 export class AddProductsToOrderDto {
-  readonly productsIds: Types.ObjectId[];
+  @Field()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsNotEmpty()
+  readonly products: Types.ObjectId[];
 }
